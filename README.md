@@ -105,6 +105,25 @@ the pipeline still returns a confident-looking decision. Two things are needed:
 Both are done at the top of `scripts/run_cell.py`, before `tradingagents` is
 imported. No file of the authors' code is modified to achieve this.
 
+### Price data is frozen
+
+Even with a working proxy, Yahoo answered this IP with 429 on roughly a third of
+attempts, and the authors' own cache only counts as fresh on the calendar day it
+was written — so the same command can produce a different result tomorrow purely
+because the cache expired. A 122-cell sweep cannot tolerate either behaviour.
+
+`data/frozen/<TICKER>-OHLCV.csv` therefore holds the authors' own five-year
+download, committed to the repository, and `scripts/_offline_yf.py` serves
+`yf.Ticker.history` from it. This is an environment workaround, not a change to
+the method: `get_indicators` already reads the same CSV through the authors'
+cache, so the two price views stay identical instead of diverging whenever the
+network is unhealthy. Tickers without a frozen file fall through to the network,
+so nothing is fabricated. Pass `--no-freeze` to use the live feed.
+
+Consequence for the report: the price series is identical across runs by
+construction, so any difference between the two arms is attributable to the
+debate-round change and to LLM sampling — not to the data.
+
 ---
 
 ## 3. Metrics
@@ -166,6 +185,8 @@ Re-run with:
 |---|---|---|
 | Yahoo Finance returns 429 through the default egress | Market analyst sees no data; decisions are made blind | Worked around (proxy + `yf.config.network.proxy`) |
 | `yfinance` ignores `HTTP_PROXY` | Same as above, even with a working proxy exported | Worked around (explicit config) |
+| Yahoo's own cache is only valid on the day it was written (`_cache_is_fresh` compares mtime) | The same backtest is not reproducible across days with no code change | Worked around (frozen CSV in `data/frozen/`) |
+| Yahoo still returns 429 intermittently through the proxy | One cell in three lost its price data mid-sweep | Worked around (frozen CSV) |
 | StockTwits API and Reddit JSON return 403 from this network | Social analyst degrades to "all sources unavailable" | **Not fixed** — recorded as a comparability loss |
 | SEC EDGAR rejects non-browser UA | Fundamentals analyst gets nothing | Worked around (browser-style UA) |
 | Paper uses `o1-preview` / `gpt-4o`; neither accessible | Model substitution | Recorded, not comparable |
@@ -178,12 +199,17 @@ Re-run with:
 
 ```
 scripts/
-  run_cell.py          one (ticker, date) decision; proxy + yfinance setup
+  _net.py              proxy resolution (the port moves between restarts)
+  _offline_yf.py       serve yf.Ticker.history from data/frozen/
+  run_cell.py          one (ticker, date) decision; the unit of the experiment
   run_sweep.py         run a date range for one arm, resumable
   score.py             CR / ARR / SR / MDD from collected decisions
   fetch_benchmark.py   benchmark price series for scoring
 data/
   cells/               per-decision summaries (committed)
+  frozen/              frozen OHLCV, five years (committed)
+  benchmark/           benchmark close series (committed)
+  pilot/               two throwaway cells used to measure cost (committed)
   cache/               market-data cache (git-ignored, regenerated)
   results/             full pipeline state logs (git-ignored)
 report/                written report and figures

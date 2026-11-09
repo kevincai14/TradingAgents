@@ -33,6 +33,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from _net import apply_proxy, configure_yfinance  # noqa: E402
+from _offline_yf import install as install_frozen  # noqa: E402
 
 _PROXY = apply_proxy()
 configure_yfinance(_PROXY)
@@ -112,7 +113,14 @@ def main() -> None:
         help="memory namespace; defaults to r<N>. Used to give concurrent "
         "workers disjoint memory logs instead of racing on one file.",
     )
+    parser.add_argument(
+        "--no-freeze",
+        action="store_true",
+        help="fetch prices from Yahoo instead of data/frozen/ (needs a healthy network)",
+    )
     args = parser.parse_args()
+
+    frozen = [] if args.no_freeze else install_frozen(REPO_ROOT / "data" / "frozen")
 
     log = memory_path(args.debate_rounds, args.memory_key)
     log.parent.mkdir(parents=True, exist_ok=True)
@@ -140,6 +148,7 @@ def main() -> None:
         "models": {"deep": config["deep_think_llm"], "quick": config["quick_think_llm"]},
         "usage": counter.as_dict(),
         "proxy": _PROXY,
+        "frozen_prices": frozen,
         "tag": args.tag,
     }
 
