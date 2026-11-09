@@ -1,0 +1,17 @@
+{
+  "ticker": "AAPL",
+  "date": "2024-01-02",
+  "debate_rounds": 1,
+  "analysts": [
+    "market",
+    "social",
+    "news",
+    "fundamentals"
+  ],
+  "decision": "Overweight",
+  "elapsed_seconds": 397.8,
+  "models": {
+    "deep": "deepseek-v4-flash",
+    "quick": "deepseek-v4-flash"
+  }
+}
