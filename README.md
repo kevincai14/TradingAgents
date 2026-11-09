@@ -12,24 +12,35 @@ top. The authors' own README is kept as [UPSTREAM_README.md](UPSTREAM_README.md)
 
 ## 1. What is being reproduced
 
-The paper's **Table 1** reports a backtest on a single ticker, AAPL, over
-2024-01-01 to 2024-03-29, with four metrics: cumulative return (CR), annualised
-return (ARR), Sharpe ratio (SR) and maximum drawdown (MDD).
+The paper's **Table 1** is a per-ticker panel: three tickers (AAPL, GOOGL, AMZN)
+over 2024-01-01 to 2024-03-29, four metrics — cumulative return (CR), annualised
+return (ARR), Sharpe ratio (SR) and maximum drawdown (MDD) — scored against four
+rule-based baselines plus buy-and-hold.
 
-| Arm | CR | ARR | SR | MDD |
-|---|---|---|---|---|
-| TradingAgents (paper) | +26.62% | — | 8.21 | 0.91% |
-| Buy & hold (paper) | −5.23% | — | −1.29 | — |
+The full AAPL panel, as reported in the paper:
 
-**Scope.** One table row, one ticker, one quarter, daily decisions. This is a
-deliberately narrow slice: the paper evaluates several tickers and several
-backbones, and reproducing all of them is out of scope. Everything below refers
-to the AAPL 2024Q1 cell only.
+| Arm | CR % | ARR % | SR | MDD % | In this study |
+|---|---|---|---|---|---|
+| Buy & hold | −5.23 | −5.09 | −1.29 | 11.90 | recomputed as the yardstick |
+| MACD | −1.49 | −1.48 | −0.81 | 4.53 | not reproduced |
+| KDJ & RSI | 2.05 | 2.07 | 1.64 | 1.09 | not reproduced |
+| ZMR | 0.57 | 0.57 | 0.17 | 0.86 | not reproduced |
+| SMA | −3.20 | −2.97 | −1.72 | 3.67 | not reproduced |
+| **TradingAgents** | **+26.62** | **+30.50** | **8.21** | **0.91** | **the target** |
 
-**The single change.** `max_debate_rounds` is switched from `1` to `2`. The paper
-uses a symbol *n* for the number of research-debate rounds without disclosing its
-value, so the baseline had to pick one; the change then measures what one
-additional bull/bear exchange actually does. See [§5](#5-the-change).
+**Target.** One cell of that panel: the TradingAgents row for AAPL, one quarter,
+one decision per trading day. Everything in this repository is scored against
+that single result vector. The four rule-based baselines are intentionally left
+out — they are cheap to recompute but reproducing them is a separate question
+(do the authors' baselines themselves replicate) that this study does not ask.
+
+**The single change.** `max_debate_rounds` is switched from `1` to `2`, i.e. one
+extra bull/bear exchange. The paper states that the number of debate rounds *n*
+is set dynamically by a debate-facilitator agent, but never reports what *n*
+actually took, so the value cannot be recovered from the paper; v0.7.1 replaces
+that facilitator with a fixed counter, which has to be given a number. The change
+therefore measures the sensitivity of the reported result to the one quantity a
+reader cannot reconstruct. See [§5](#5-the-change).
 
 ---
 
