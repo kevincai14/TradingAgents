@@ -1,0 +1,78 @@
+{
+  "ticker": "AAPL",
+  "date": "2024-01-04",
+  "frozen_prices": [
+    "AAPL"
+  ],
+  "proxy": "http://127.0.0.1:4780",
+  "available": 8,
+  "total": 11,
+  "routes": [
+    {
+      "tool": "price / get_stock_data",
+      "status": "OK",
+      "seconds": 0.04,
+      "detail": "# Stock data for AAPL from 2023-12-01 to 2024-01-04 # Total records: 23  Date,Open,High,Low,Close,Volume\r 2023-12-01,188"
+    },
+    {
+      "tool": "price / get_indicators(close_50_sma)",
+      "status": "OK",
+      "seconds": 0.06,
+      "detail": "## close_50_sma values from 2023-09-06 to 2024-01-04:  2024-01-04: 184.92855377197264 2024-01-03: 184.74800231933594 202"
+    },
+    {
+      "tool": "price / get_indicators(rsi)",
+      "status": "OK",
+      "seconds": 0.02,
+      "detail": "## rsi values from 2023-09-06 to 2024-01-04:  2024-01-04: 29.828357204970985 2024-01-03: 33.21009033898303 2024-01-02: 3"
+    },
+    {
+      "tool": "fundamentals / get_fundamentals",
+      "status": "OK",
+      "seconds": 0.0,
+      "detail": "# Company Fundamentals for AAPL # Point-in-time as of: 2024-01-04  Profile fundamentals are withheld for this date. This"
+    },
+    {
+      "tool": "fundamentals / balance_sheet",
+      "status": "OK",
+      "seconds": 0.06,
+      "detail": "# Balance Sheet for AAPL (quarterly), USD in millions unless the column says otherwise # SEC EDGAR facts filed on or bef"
+    },
+    {
+      "tool": "fundamentals / cashflow",
+      "status": "OK",
+      "seconds": 0.03,
+      "detail": "# Cash Flow Statement for AAPL (quarterly), USD in millions unless the column says otherwise # SEC EDGAR facts filed on "
+    },
+    {
+      "tool": "fundamentals / income_statement",
+      "status": "OK",
+      "seconds": 0.04,
+      "detail": "# Income Statement for AAPL (quarterly), USD in millions unless the column says otherwise # SEC EDGAR facts filed on or "
+    },
+    {
+      "tool": "news / get_news",
+      "status": "UNAVAILABLE",
+      "seconds": 0.47,
+      "detail": "<Yahoo Finance news unavailable for 2023-12-01..2024-01-04: it only serves recent items, so this is not an absence of ne"
+    },
+    {
+      "tool": "news / get_global_news",
+      "status": "UNAVAILABLE",
+      "seconds": 1.73,
+      "detail": "<Yahoo Finance global news unavailable for 2023-12-28..2024-01-04: it only serves recent items, so this is not an absenc"
+    },
+    {
+      "tool": "news / insider_transactions",
+      "status": "OK",
+      "seconds": 0.08,
+      "detail": "# Insider Transactions data for AAPL ,Shares,Value,URL,Text,Insider,Position,Transaction,Start Date,Ownership\r 0,2399,78"
+    },
+    {
+      "tool": "macro / get_macro_indicators",
+      "status": "UNAVAILABLE",
+      "seconds": 0.0,
+      "detail": "DATA_UNAVAILABLE: optional macro_data could not be retrieved (strptime() argument 1 must be str, not tuple). Proceed wit"
+    }
+  ]
+}
